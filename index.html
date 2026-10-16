@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#075B43">
+
+    <title>مسيرة يومك | فاندرايف</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+</head>
+<body>
+
+<main class="container">
+
+    <header class="header">
+        <div class="logo">
+            <img src="hossam.png" alt="حسام">
+        </div>
+
+        <h1>مسيرة يومك فاندرايف يا حسام البطل</h1>
+        <p>تابع شغلك، واحسب مكسبك، وحقق هدفك 💚</p>
+
+        <div class="today-badge">
+            📅 النهارده: <span id="todayDate"></span>
+        </div>
+    </header>
+
+    <!-- تسجيل اليوم -->
+    <section class="card">
+        <h2>📊 تسجيل يومك</h2>
+
+        <form id="salaryForm">
+            <div class="input-group">
+                <label for="workDate">📅 تاريخ اليوم المسجل</label>
+                <input type="date" id="workDate" required>
+            </div>
+
+            <div class="input-group">
+                <label for="dayType">نوع اليوم</label>
+                <select id="dayType">
+                    <option value="work">يوم شغل</option>
+                    <option value="holiday">يوم إجازة</option>
+                </select>
+            </div>
+
+            <div id="workFields">
+                <div class="input-group">
+                    <label for="hours">🏍️ عدد ساعات الشغل</label>
+                    <input type="number" id="hours" min="0.01"
+                           step="any" placeholder="مثال: 8" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="money">💰 إجمالي الإيراد بالجنيه</label>
+                    <input type="number" id="money" min="0"
+                           step="any" placeholder="مثال: 950" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="banzen">⛽ مصاريف البنزين بالجنيه</label>
+                    <input type="number" id="banzen" min="0"
+                           step="any" placeholder="مثال: 100" required>
+                </div>
+            </div>
+
+            <button type="submit" id="saveButton">
+                احفظ بيانات اليوم 💚
+            </button>
+
+            <button type="button" id="cancelEdit" class="secondary" hidden>
+                إلغاء التعديل
+            </button>
+        </form>
+
+        <p class="hint">
+            💡 الهدف اليومي = 100 جنيه × عدد ساعات الشغل.
+        </p>
+
+        <!-- تفاصيل اليوم -->
+        <div id="dailyComparison" class="daily-comparison" hidden>
+            <h2>📋 تفاصيل يومك يا حسام</h2>
+
+            <div class="result-item">
+                <span>⏱️ ساعات الشغل</span>
+                <strong id="resultHours"></strong>
+            </div>
+
+            <div class="result-item">
+                <span>🎯 المفروض تحققه</span>
+                <strong id="resultTarget"></strong>
+            </div>
+
+            <div class="result-item">
+                <span>💰 إجمالي الإيراد اللي حققته</span>
+                <strong id="resultMoney"></strong>
+            </div>
+
+            <div class="result-item">
+                <span>⛽ مصاريف البنزين</span>
+                <strong id="resultBanzen"></strong>
+            </div>
+
+            <div class="result-item net">
+                <span>💵 صافي مكسبك</span>
+                <strong id="resultNet"></strong>
+            </div>
+
+            <div class="result-item">
+                <span id="comparisonLabel">الفرق عن الهدف</span>
+                <strong id="resultDifference"></strong>
+            </div>
+
+            <div id="dailyMessage" class="message"></div>
+        </div>
+    </section>
+
+    <!-- الإحصائيات -->
+    <section class="stats-grid">
+        <article class="stat-card main-stat">
+            <span>💵 صافي مكاسب الشهر</span>
+            <strong id="monthNet">0 ج</strong>
+        </article>
+
+        <article class="stat-card">
+            <span>📈 إجمالي صافي المكاسب</span>
+            <strong id="allNet">0 ج</strong>
+        </article>
+
+        <article class="stat-card">
+            <span>🏆 أيام ناجحة جدًا</span>
+            <strong id="successCount">0</strong>
+        </article>
+
+        <article class="stat-card">
+            <span>🎯 أيام ناجحة</span>
+            <strong id="exactCount">0</strong>
+        </article>
+
+        <article class="stat-card">
+            <span>📉 أيام سيئة</span>
+            <strong id="failCount">0</strong>
+        </article>
+
+        <article class="stat-card">
+            <span>🏖️ أيام إجازة</span>
+            <strong id="holidayCount">0</strong>
+        </article>
+
+        <article class="stat-card">
+            <span>⬆️ الزيادة عن الأهداف</span>
+            <strong id="totalSurplus">0 ج</strong>
+        </article>
+
+        <article class="stat-card">
+            <span>⬇️ العجز عن الأهداف</span>
+            <strong id="totalDeficit">0 ج</strong>
+        </article>
+    </section>
+
+    <!-- سجل الأيام -->
+    <section class="card">
+        <h2>📅 سجل مسيرتك</h2>
+
+        <div class="filter-row">
+            <div class="input-group">
+                <label for="monthFilter">اختر الشهر للمراجعة</label>
+                <input type="month" id="monthFilter">
+            </div>
+
+            <button type="button" id="showAll" class="secondary">
+                عرض كل الأيام
+            </button>
+        </div>
+
+        <p id="recordsSummary" class="hint"></p>
+
+        <div id="recordsList" class="records-list"></div>
+    </section>
+
+    <!-- إدارة البيانات -->
+    <section class="card danger-card">
+        <h2>⚙️ إدارة بياناتك</h2>
+
+        <p class="hint">
+            تقدر تمسح يوم سجلته بالغلط، أو تصفر كل الأيام
+            والمبالغ والحسابات وتبدأ من جديد.
+        </p>
+
+        <button type="button" id="resetButton" class="danger">
+            🗑️ تصفير الأيام والمبالغ والحسابات
+        </button>
+    </section>
+
+    <footer>
+        كل يوم خطوة جديدة نحو هدفك 💚
+        <p>بياناتك محفوظة على هذا المتصفح والجهاز.</p>
+    </footer>
+
+</main>
+
+<!-- رسالة التشجيع المتحركة -->
+<div id="celebrationOverlay" class="celebration-overlay" hidden>
+    <div id="celebrationBox" class="celebration-box" role="status"
+         aria-live="polite">
+        <div id="celebrationEmoji" class="celebration-emoji">🏆</div>
+        <h2 id="celebrationTitle">يوم ناجح يا بطل!</h2>
+        <p id="celebrationText"></p>
+        <button type="button" id="celebrationClose">
+            كمل يا بطل 💚
+        </button>
+    </div>
+</div>
+
+</body>
+</html>
